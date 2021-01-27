@@ -1,0 +1,71 @@
+<h2>Settings NUT</h2>
+<form method="post" data-ajax="false" name="main_form" id="main_form" action="index.cgi">
+	<input type="hidden" name="save" value="save">
+		<div class="form-group">
+			<table class="formtable" border="0" width="700">
+				<tr>				
+					<td width="200">
+						<label id="labelip"><b><TMPL_VAR BASIC.NUT_EMAIL></b></label><br/>
+					</td>
+					<td colspan=2">
+						<select name="EMAIL" data-role="flipswitch">
+							<option <TMPL_VAR NAME=EMAILSENDNO> value="0"><TMPL_VAR BASIC.NUT_EMAIL_OFF></option>
+							<option <TMPL_VAR NAME=EMAILSENDYES> value="1"><TMPL_VAR BASIC.NUT_EMAIL_ON></option>
+						</select>
+						<font size="-1"><TMPL_VAR BASIC.NUT_HEMAIL></font>
+					</td>
+				</tr>
+				<tr><td>&nbsp;</td></tr>
+				<tr>
+					<td width="200">
+						<label id="labelmsenabled"><b><TMPL_VAR BASIC.NUT_HTML></b></label>
+					</td>
+					<td colspan=2">
+						<select name="HTTPSEND" data-role="flipswitch">
+							<option <TMPL_VAR NAME=HTTPSENDNO> value="0"><TMPL_VAR BASIC.NUT_HTML_OFF></option>
+							<option <TMPL_VAR NAME=HTTPSENDYES> value="1"><TMPL_VAR BASIC.NUT_HTML_ON></option>
+						</select>
+						<font size="-1"><TMPL_VAR BASIC.NUT_HHTML></font>
+					</td>
+				</tr>
+				<tr>
+					<td width="200">
+						&nbsp;
+					</td>
+					<td colspan=2">
+						<select name="MINISERVER" data-mini="true" onchange="selMS(this);">
+							<TMPL_VAR NAME=LOXLIST>
+						</select>
+						<font size="-1"><TMPL_VAR BASIC.NUT_HMINISERVER></font><br/><br/>
+						<font size="-1"><TMPL_VAR BASIC.NUT_VINAME></font>
+					</td>
+				</tr>
+				<tr><td>&nbsp;</td></tr>
+				<tr>
+					<td width="200">
+						&nbsp;
+					</td>
+					<td colspan=2>
+							<a id="btncancel" data-role="button" data-inline="true" data-mini="true" data-icon="delete" href="./index.cgi?form=1"><TMPL_VAR BASIC.NUT_CANCEL></a>
+							<button type="submit" form="main_form" id="do" data-role="button" data-inline="true" data-mini="true" data-icon="check"><TMPL_VAR BASIC.NUT_SAVE></button>
+							<a id="button" data-icon="info" data-role="button" data-inline="true" data-mini="true" 
+							href="<TMPL_VAR NAME=LOGDATEI>" 
+							target="_blank"><TMPL_VAR BASIC.NUT_LOG></a>
+					</td>
+				</tr>		
+		</table>
+		<br/><hr><br/>
+		<table class="formtable" border="0" width="700">
+				<tr>
+					<td width="200" valign=top>
+						<b><TMPL_VAR BASIC.NUT_GET></b>
+					</td>
+					<td colspan=2>
+						<font size="-1"><b><TMPL_VAR BASIC.NUT_HGET></b></font><br/>
+						<font size="-1"><a href="<TMPL_VAR NAME=WEBSITE_GET>" target=_blank"><TMPL_VAR NAME=WEBSITE_GET></a></font><br/>
+						<font size="-1"><TMPL_VAR BASIC.NUT_IGET></font><br/><br/>
+					</td>
+				</tr>	
+		</table>
+	</div>
+</form>
