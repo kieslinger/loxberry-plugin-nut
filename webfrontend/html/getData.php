@@ -1,40 +1,46 @@
 <?php
-require_once "loxberry_log.php";
+include_once "logging.php";
 
-$params = [
-    "name" => "Daemon",
-    "filename" => "$lbplogdir/nut.log",
-    "append" => 1
-];
-$log = LBLog::newLog ($params);
-
-LOGSTART("NUT HTTP getData.php started");
+mem_LOGSTART("NUT HTTP getData.php started");
 
 // load config
 include_once 'config.php';
 
 // get data from UPS
+mem_LOGINF("Getting data from UPS");
 @exec('upsc ups 2>&1',$results,$retval);
 
+$help = "initial";
 if( $retval != 0 ) {
-	print "Error while getting data!<br";
-	LOGERR("Error while getting data!");
-	LOGEND("NUT HTTP getData.php stopped");
-	exit(0);
+	print "Error while getting data!<br><br>";
+	mem_LOGERR("Error while getting data!");	
+	
+	// try show usefull informations
+	if(in_array("Error: Data stale", $results)) {
+		$help = "Please check USB connection";		
+	} elseif(in_array("Error: Driver not connected", $results)) {
+		$help = "SSH into LoxBerry and try \"upsdrvctl start\"";
+	} elseif(in_array("Error: Connection failure: Connection refused", $results)) {
+		$help = "SSH into LoxBerry and try \"service nut-server stop/start\"";
+	}
 }
-
-LOGINF("Getting data from UPS");
-
-// print request moment
-print "System@DateTime@".date('d.m.Y H:i:s')."<br>";
-print "System@DateTimeLox@".epoch2lox(time())."<br><br>";
 
 // puffer output
 ob_start();
 
+// print request moment
+print "System@DateTime@".date('d.m.Y H:i:s')."<br>";
+print "System@DateTimeLox@".epoch2lox(time())."<br>";
+print "System@Help@$help<br><br>";
+
 // convert data
-LOGINF("Converting data...");
+mem_LOGOK("Converting data...");
 foreach($results AS $line) {
+	// convert error to status
+	if(strpos($line, "Error:") !== false) {
+		$line = "ups.status:".substr($line, 6);
+	}
+	
 	$values = explode(":",$line);
 	// noting to print
 	if( empty($values[0]) ) {
@@ -56,9 +62,9 @@ foreach($results AS $line) {
 
 	// replace all other dots
 	$params = explode(".",$param_str);
-	unset($param_str);
+	$param_str = "";
 	foreach($params AS $param) {
-		$param_str = $param_str.ucfirst( $param );
+		$param_str .= ucfirst( $param );
 	}
 	
 	if( $is_date ) {
@@ -68,20 +74,21 @@ foreach($results AS $line) {
 	} else {
 		print $name."@".$param_str."@".trim($values[1])."<br>";
 	}
-	LOGDEB($name."@".$param_str."@".trim($values[1]));
+	mem_LOGDEB($name."@".$param_str."@".trim($values[1]));
 
 }
 print "<br>";
 
 // Responce to virutal input?
 if($config_http_send == 1) {	
-	LOGDEB("Starting Response to miniserver...");
+	mem_LOGDEB("Starting Response to miniserver...");
 	include_once 'sendResponces.php';
 } 
 
 // print data
 ob_end_flush();
 
-LOGEND("NUT HTTP getData.php stopped");	
+mem_LOGEND("NUT HTTP getData.php stopped");	
+exit(0);
 
 ?>
