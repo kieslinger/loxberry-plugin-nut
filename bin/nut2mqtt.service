@@ -1,0 +1,18 @@
+[Unit]
+Description=nut2mqtt
+After=network.target remote-fs.target syslog.target network-online.target loxberry.service
+
+[Service]
+Type=simple
+ExecStart=/opt/loxberry/bin/plugins/nut/nut2mqtt.pl light json
+WorkingDirectory=/opt/loxberry/
+#StandardOutput=syslog
+StandardOutput=null
+#StandardError=syslog
+StandardError=null
+Restart=always
+RestartSec=30
+User=loxberry
+
+[Install]
+WantedBy=multi-user.target

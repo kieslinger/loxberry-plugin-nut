@@ -1,6 +1,8 @@
 <?php
 require_once "loxberry_log.php";
 
+//upscmd -u upsmaster -p FhsjW7GTnPCnFAXZ ups beeper.disable
+
 // check inputs
 switch($_GET['mode'] ) {	
 	case "0":
