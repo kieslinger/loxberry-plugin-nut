@@ -52,7 +52,7 @@ while (1) {
 		# get data from UPS
 		if ($index == 0) {
 			$topic .= "DG/";
-			$result = `upsc ups\@localhost 2>&1`;
+			$result = `upsc ups\@10.1.10.30 2>&1`;
 		} else {
 			$topic .= "EG/";
 			$result = `upsc ups\@10.1.10.15 2>&1`;
@@ -61,7 +61,7 @@ while (1) {
 		# check error informations
 		my $help = "initial";
 		if( $result =~ /Error:/ ) {
-			print "Error while getting data!\n";
+			print $topic." -> Error while getting data!\n";
 			
 			# try show usefull informations
 			if ($result =~ /Data stale/) {
@@ -95,7 +95,7 @@ while (1) {
 			$value = trim($value);
 			
 			# noting to transfer
-			if (!$param || $param eq '' || !$value || $value eq '') { 
+			if (length( $param // '') == 0 || length( $value // '') == 0) {
 				next; 
 			}
 
@@ -124,13 +124,13 @@ while (1) {
 				$value =~ s/\//\-/g;
 				my $date = Time::Piece->strptime($value, "%Y-%m-%d %H-%M-%S");
 				
-				# publish loxdate to MQTT
-				$value = epoch2lox($date->epoch);
+				# publish date as epoch to MQTT
+				$value = $date->epoch;
 				if ($use_json == 1) {
-					$json_array{ $param."/lox" } = $value;
+					$json_array{ $param."/epoch" } = $value;
 				} else {
-					print "publish: ".$param."/lox value: ".$value."\n";
-					$mqtt->publish( $topic.$param."/lox", $value );
+					print "publish: ".$param."/epoch value: ".$value."\n";
+					$mqtt->publish( $topic.$param."/epoch", $value );
 				}
 				
 				# publish date to MQTT

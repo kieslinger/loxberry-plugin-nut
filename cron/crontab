@@ -1,0 +1,11 @@
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=""
+
+# m h dom mon dow user  command
+* * * * * loxberry /opt/loxberry/bin/plugins/nut/nut2mqtt.pl light json > /dev/null 2>&1
+* * * * * loxberry ( sleep 10 ; /opt/loxberry/bin/plugins/nut/nut2mqtt.pl light json > /dev/null 2>&1)
+* * * * * loxberry ( sleep 20 ; /opt/loxberry/bin/plugins/nut/nut2mqtt.pl light json > /dev/null 2>&1)
+* * * * * loxberry ( sleep 30 ; /opt/loxberry/bin/plugins/nut/nut2mqtt.pl light json > /dev/null 2>&1)
+* * * * * loxberry ( sleep 40 ; /opt/loxberry/bin/plugins/nut/nut2mqtt.pl light json > /dev/null 2>&1)
+* * * * * loxberry ( sleep 50 ; /opt/loxberry/bin/plugins/nut/nut2mqtt.pl light json > /dev/null 2>&1)
